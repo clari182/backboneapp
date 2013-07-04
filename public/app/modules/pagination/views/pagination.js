@@ -23,6 +23,7 @@ define([
 
         initialize: function () {
 
+            // Listen events on Collection
             this.listenTo(this.collection, 'sync', _.bind(this.loadPageNumbers, this));
         },
 

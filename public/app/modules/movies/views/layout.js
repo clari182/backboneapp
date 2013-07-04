@@ -38,6 +38,7 @@ define([
         params.page = page;
       }
 
+      // Fire event for listener (Module)
       this.trigger('filter', params);
     },
 
@@ -47,7 +48,7 @@ define([
       this.filter(1);
     },
 
-    // Si 
+    //
     matchEnter: function (evt) {
 
       if (evt.keyCode === 13) {

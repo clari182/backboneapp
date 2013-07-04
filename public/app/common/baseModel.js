@@ -4,8 +4,15 @@ define([
 
   var BaseModel = Backbone.Model.extend({
 
+    /**
+      * Configure defaul id name
+      */
     idAttribute: '_id',
     
+    /**
+      * Overload native function
+      * for version control header
+      */
     destroy: function (options) {
 
       var options = options || {};

@@ -19,6 +19,10 @@ define([
       this.trigger('confirmRemove', this);
     },
 
+    /**
+      * Overwrite native function
+      * to set the field to be showed
+      */
     serializeData: function () {
       var data = {};
 

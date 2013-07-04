@@ -5,9 +5,10 @@ define([
 
 	var top = app.module('Top', function (Top, app) {
 
-		// Cuando la aplicacion arraque le decimos que mostrar en el Top
+		// On app start, set top
 		app.on('start', function () {
 
+			// Show top
 			this.vent.trigger('app:showTop', new TopView);
 		});
 	});

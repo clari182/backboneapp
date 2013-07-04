@@ -1,18 +1,20 @@
 define([
 	'app/app',
-	'app/common/eventHandler',
 	'app/modules/users/routers/users',
 	'app/modules/users/controllers/users',
 	'app/modules/users/collections/users',
 	'app/modules/users/views/layout',
-    'app/modules/users/views/collection',
-    'app/modules/pagination/views/pagination',
+	'app/modules/users/views/collection',
+	'app/modules/pagination/views/pagination',
 	'app/modules/users/views/form',
 	'app/modules/users/views/detail'
-], function (app, eventHandler, UsersRouter, usersController, UsersCollection, UsersCollectionLayout, UsersCollectionView, PaginationView, UsersFormView, UsersDetailView) {
+], function (app, UsersRouter, usersController, UsersCollection, UsersCollectionLayout, UsersCollectionView, PaginationView, UsersFormView, UsersDetailView) {
 
 	var users = app.module('Users', function (Users, app) {
 
+		/**
+			* Collection init, Router init and privated methos an vars
+			*/
 		var usersCollection = new UsersCollection([]), 
 
 			prevFilterParams = {},
@@ -22,10 +24,10 @@ define([
 				var model = new usersCollection.model({_id: id}),
 					dfd = jQuery.Deferred();
 
-				//
+				// Show loader
 				app.vent.trigger('app:showSpinner');
 
-				//
+				// Search record info
 				$.when(model.fetch())
 					.done(function (response) {
 
@@ -36,12 +38,12 @@ define([
 
 						dfd.reject(model);
 
-						// Mostramos el listado
+						// Navigate to CollectionView
 						router.navigate('users', {trigger: true});
 					})
 					.always(function () {
 
-						//
+						// Hide loader
 						app.vent.trigger('app:hideSpinner');
 					});
 
@@ -51,7 +53,9 @@ define([
 			router =  new UsersRouter({controller: usersController});
 
 
-		// Collection events
+		/**
+			* Listen for collection events
+			*/
 		usersCollection.on('request', function(){
 			app.vent.trigger('app:showSpinner');
 		});
@@ -59,44 +63,54 @@ define([
 			app.vent.trigger('app:hideSpinner');
 		});
 
-
-		//
+	
+		/**
+			* Listen for router events
+			*/
 		router.on('route:showCollectionView', function () {
 
 			var paginationView = new PaginationView({collection: usersCollection}),
 				collectionView = new UsersCollectionView({collection: usersCollection}),
 				layout = new UsersCollectionLayout();
 
-			//
+			
+			/**
+				* Listen events on  PaginationView
+				*/
 			paginationView.on('changePage', function (page) {
 
 				layout.filter(page);
 			});
 
-			//
+
+			/**
+				* Listen events on collectionView
+				*/
 			collectionView.on('itemview:confirmRemove', function (view) {
 
-				// Solicitamos confirmacion
-				eventHandler.trigger('app:showConfirm', {
+				// Request user confirmation
+				app.vent.trigger('app:showConfirm', {
 					message: 'Estas seguro de eliminar el usuario "' + view.model.get('name') + ' ' + view.model.get('lastname') + '"?',
 					accept: function () {
 
-						// Destruimos el modelo
+						// Destroy model
 						view.model.destroy({
 							success: function () {
 
-								// Mostramos el exito
-								eventHandler.trigger('app:showSuccess', {
+								// Show success
+								app.vent.trigger('app:showSuccess', {
 									message: 'El usuario fue eliminada con exito!'
 								});
 
-								//
+								// Update CollectionView
 								layout.trigger('filter', prevFilterParams);
 							},
 							error: function () {
 
-								// Mostramos el error @TODO obtener el error
-								eventHandler.trigger('app:showError', {
+								// @TODO get error from response
+
+								// Show error
+								app.vent.trigger('app:showError', {
 									message: ''
 								});
 							}
@@ -104,6 +118,7 @@ define([
 					}
 				});
 			});
+
 			collectionView.on('itemview:showInfo', function (view) {
 
 				var detailView = new UsersDetailView({model: view.model}),
@@ -121,10 +136,17 @@ define([
 						]
 					});
 
+
+				/**
+					* Show this view
+					*/
 				app.vent.trigger('app:showModal', modalLayout);
 			}, this);
 
-			//
+			
+			/**
+				* Listen events on Layout
+				*/
 			layout.on('filter', function (params) {
 
 				if (!params) {
@@ -137,38 +159,50 @@ define([
 				usersCollection.remove(usersCollection.models);
 				usersCollection.fetch({data: params});
 			});
+
 			layout.on('render', function () {
 				this.pagination.show(paginationView);
 				this.table.show(collectionView);
 				this.filter(1);
 			});
+
+
+			/**
+				* Show this view
+				*/
 			app.vent.trigger('app:showView', layout, Users.menuConf);
 		});
+		
 		
 		//
 		router.on('route:showFormView', function (id) {
 
 			var success = function (model) {
 
+				// Creat FormView
 				var view = new UsersFormView({
 					model: model
 				});
 
-				//
+
+				/**
+					* Listen events for FormView
+					*/
 				view.on('save', function (model, attrs) {
 
 					var self = this,
 						add = !model.get('_id');
 
-					// Guardamos
+					// Save model
 					model.save(attrs)
 						.done(function () {
 
-							// Avisamos
-							eventHandler.trigger('app:showSuccess', {
+							// Show success
+							app.vent.trigger('app:showSuccess', {
 								message: 'El usuario fue ' + (add? 'cargado' : 'actualizado') + ' con exito!',
 								close: function () {
 
+									// Navigate to users CollectionView
 									router.navigate('users', {trigger: true});
 								}
 							});
@@ -177,53 +211,47 @@ define([
 
 							var msg = 'Ha ocurrido un error.<br />Por favor, recarge pa pagina.';
 
-							//@TODO Ver de centralizar este analisis
+							//@TODO Centralize status control
 							if (res.status === 409) {
 								msg = 'El registro ya ha sido actualizada por otro usuario.<br />Actualice la p&aacute;gina para ver los nuevos datos.';
 							}
 
-							// 
-							eventHandler.trigger('app:showError', {message: msg});
+							// Show error
+							app.vent.trigger('app:showError', {message: msg});
 						});
 				});
+
 				view.on('showError', function (msg) {
 
-					eventHandler.trigger('app:showError', msg);
+					app.vent.trigger('app:showError', msg);
 				});
 
-				//
+				
+				/**
+					* Show this view
+					*/
 				app.vent.trigger('app:showView', view, Users.menuConf);
 			};
 
-			// Si pasamos un id
+			// If id was pass
 			if (!!id) {
 
-				// Validamos que exista
+				// Validate record exists
 				validate(id)
 					.done(success);
 			}
 			else {
 
+				// Show form
 				success(new usersCollection.model);
 			}
 		});
-		
-		//
-		router.on('route:showDetailView', function (id) {
-
-			// Validamos que exista
-			validate(id)
-				.done(function (model) {
-				
-					// Instanciamos
-					var view = new UsersDetailView({model: model});
-
-					app.vent.trigger('app:showView', view, Users.menuConf);
-			});
-		});
 	});
 
-	//
+	
+	/**
+	* Set module menu config
+	*/
 	users.menuConf = {
 		label: 'Usuarios',
 		routePath: '#users'

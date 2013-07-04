@@ -35,6 +35,7 @@ define([
         params.page = page;
       }
 
+      // Fire event to the listener (Module)
       this.trigger('filter', params);
     },
 
