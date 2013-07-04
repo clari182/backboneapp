@@ -1,4 +1,4 @@
-backboneapp
-===========
+mvcbackboneVideoclub
+====================
 
-Use RequireJS, Backbone, JQuery and underscore
+MVC app usign backbone, require-js, underscore and handlebars
