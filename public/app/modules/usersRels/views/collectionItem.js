@@ -17,6 +17,25 @@ define([
     confirmRemove: function() {
 
       this.trigger('confirmRemove', this);
+    },
+
+    serializeData: function () {
+      var data = {};
+
+      if (this.model) {
+
+        this.model.set('field', this.model.get(this.options.showField));
+        data = this.model.toJSON();
+      }
+      else if (this.collection) {
+
+        data = {
+          items: this.collection.toJSON(),
+          field: this.options.showField
+        };
+      }
+
+      return data;
     }
   });
 

@@ -27,7 +27,7 @@ define([
 
       var params = {
         page: 1,
-        name: this.$el.find('.search').val()
+        key: this.$el.find('.search').val()
       };
 
       if (!isNaN(page) && page > 0) {

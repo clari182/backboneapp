@@ -16,7 +16,14 @@ define([
 
     itemView: UsersRelsCollectionItemView,
 
-    itemViewContainer: 'tbody'
+    itemViewContainer: 'tbody',
+
+    buildItemView: function (item, ItemViewType, itemViewOptions) {
+
+      var options = _.extend({model: item}, itemViewOptions);
+      options.showField = this.options.showField;
+      return new ItemViewType(options);
+    }
   });
 
   return UsersRelsCollectionView;
