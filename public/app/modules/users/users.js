@@ -132,7 +132,7 @@ define([
 						title: view.model.get('name') + ' ' + view.model.get('lastname'),
 						tabs: [
 							{view: detailView, title: 'Detalle'},
-							{view: usersRelsLayout, title: 'Usuarios'}
+							{view: usersRelsLayout, title: 'Peliculas'}
 						]
 					});
 

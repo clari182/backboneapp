@@ -36,7 +36,7 @@ define([
       /**
         * Listen events on CollectionView
         */
-      collectionView.on('itemView:confirmRemove', function (view) {
+      collectionView.on('itemview:confirmRemove', function (view) {
 
         // Request user confirmation
         app.vent.trigger('app:showConfirm', {
