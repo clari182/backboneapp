@@ -1,17 +1,17 @@
 define([
   'jquery',
   'bbloader',
-  'text!app/modules/movies/views/templates/form.html'
-], function($, Backbone, moviesFormHTML) {
+  'text!app/modules/users/views/templates/form.html'
+], function($, Backbone, usersFormHTML) {
   
   //
-  var MoviesFormView = Backbone.Marionette.ItemView.extend({
+  var UsersFormView = Backbone.Marionette.ItemView.extend({
 
     tagName: 'div',
 
     className: 'span12',
     
-    template: moviesFormHTML,
+    template: usersFormHTML,
 
     //
     events: {
@@ -99,5 +99,5 @@ define([
     }
   });
 
-  return MoviesFormView;
+  return UsersFormView;
 });

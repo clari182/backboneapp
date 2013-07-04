@@ -1,25 +1,25 @@
 define([
 	'app/app',
 	'app/common/eventHandler',
-	'app/modules/movies/routers/movies',
-	'app/modules/movies/controllers/movies',
-	'app/modules/movies/collections/movies',
-	'app/modules/movies/views/layout',
-    'app/modules/movies/views/collection',
+	'app/modules/users/routers/users',
+	'app/modules/users/controllers/users',
+	'app/modules/users/collections/users',
+	'app/modules/users/views/layout',
+    'app/modules/users/views/collection',
     'app/modules/pagination/views/pagination',
-	'app/modules/movies/views/form',
-	'app/modules/movies/views/detail'
-], function (app, eventHandler, MoviesRouter, moviesController, MoviesCollection, MoviesCollectionLayout, MoviesCollectionView, PaginationView, MoviesFormView, MoviesDetailView) {
+	'app/modules/users/views/form',
+	'app/modules/users/views/detail'
+], function (app, eventHandler, UsersRouter, usersController, UsersCollection, UsersCollectionLayout, UsersCollectionView, PaginationView, UsersFormView, UsersDetailView) {
 
-	var movies = app.module('Movies', function (Movies, app) {
+	var users = app.module('Users', function (Users, app) {
 
-		var moviesCollection = new MoviesCollection([]), 
+		var usersCollection = new UsersCollection([]), 
 
 			prevFilterParams = {},
 
 			validate = function (id) {
 	      
-				var model = new moviesCollection.model({_id: id}),
+				var model = new usersCollection.model({_id: id}),
 					dfd = jQuery.Deferred();
 
 				//
@@ -37,7 +37,7 @@ define([
 						dfd.reject(model);
 
 						// Mostramos el listado
-						router.navigate('movies', {trigger: true});
+						router.navigate('users', {trigger: true});
 					})
 					.always(function () {
 
@@ -48,14 +48,14 @@ define([
 				return dfd.promise();
 			}, 
 
-			router =  new MoviesRouter({controller: moviesController});
+			router =  new UsersRouter({controller: usersController});
 
 
 		// Collection events
-		moviesCollection.on('request', function () {
+		usersCollection.on('request', function(){
 			app.vent.trigger('app:showSpinner');
 		});
-		moviesCollection.on('sync', function () {
+		usersCollection.on('sync', function(){
 			app.vent.trigger('app:hideSpinner');
 		});
 
@@ -63,9 +63,9 @@ define([
 		//
 		router.on('route:showCollectionView', function () {
 
-			var paginationView = new PaginationView({collection: moviesCollection}),
-				collectionView = new MoviesCollectionView({collection: moviesCollection}),
-				layout = new MoviesCollectionLayout();
+			var paginationView = new PaginationView({collection: usersCollection}),
+				collectionView = new UsersCollectionView({collection: usersCollection}),
+				layout = new UsersCollectionLayout();
 
 			//
 			paginationView.on('changePage', function (page) {
@@ -78,7 +78,7 @@ define([
 
 				// Solicitamos confirmacion
 				eventHandler.trigger('app:showConfirm', {
-					message: 'Estas seguro de eliminar la pelicula "' + view.model.get('title') + '"?',
+					message: 'Estas seguro de eliminar el usuario "' + view.model.get('name') + ' ' + view.model.get('lastname') + '"?',
 					accept: function () {
 
 						// Destruimos el modelo
@@ -87,8 +87,11 @@ define([
 
 								// Mostramos el exito
 								eventHandler.trigger('app:showSuccess', {
-									message: 'La pelicula fue eliminada con exito!'
+									message: 'El usuario fue eliminada con exito!'
 								});
+
+								//
+								layout.trigger('filter', prevFilterParams);
 							},
 							error: function () {
 
@@ -101,18 +104,17 @@ define([
 					}
 				});
 			});
-			
 			collectionView.on('itemview:showInfo', function (view) {
 
-				var detailView = new MoviesDetailView({model: view.model}),
+				var detailView = new UsersDetailView({model: view.model}),
 
 					usersRelsLayout = app.UsersRels.getLayout({
-						idReg: view.model.get('_id'),
+						idUser: view.model.get('_id'),
 						typeReg: 'movie'
 					}),
 
 					modalLayout = app.ModalModule.getLayout({
-						title: view.model.get('title'),
+						title: view.model.get('name') + ' ' + view.model.get('lastname'),
 						tabs: [
 							{view: detailView, title: 'Detalle'},
 							{view: usersRelsLayout, title: 'Usuarios'}
@@ -132,17 +134,15 @@ define([
 					prevFilterParams = params;
 				}
 
-				moviesCollection.remove(moviesCollection.models);
-				moviesCollection.fetch({data: params});
+				usersCollection.remove(usersCollection.models);
+				usersCollection.fetch({data: params});
 			});
-
 			layout.on('render', function () {
 				this.pagination.show(paginationView);
 				this.table.show(collectionView);
 				this.filter(1);
 			});
-
-			app.vent.trigger('app:showView', layout, Movies.menuConf);
+			app.vent.trigger('app:showView', layout, Users.menuConf);
 		});
 		
 		//
@@ -150,7 +150,7 @@ define([
 
 			var success = function (model) {
 
-				var view = new MoviesFormView({
+				var view = new UsersFormView({
 					model: model
 				});
 
@@ -166,10 +166,10 @@ define([
 
 							// Avisamos
 							eventHandler.trigger('app:showSuccess', {
-								message: 'La pelicula fue ' + (add? 'cargada' : 'actualizada') + ' con exito!',
+								message: 'El usuario fue ' + (add? 'cargado' : 'actualizado') + ' con exito!',
 								close: function () {
 
-									router.navigate('movies', {trigger: true});
+									router.navigate('users', {trigger: true});
 								}
 							});
 						})
@@ -192,42 +192,42 @@ define([
 				});
 
 				//
-				app.vent.trigger('app:showView', view, Movies.menuConf);
+				app.vent.trigger('app:showView', view, Users.menuConf);
 			};
 
 			// Si pasamos un id
 			if (!!id) {
 
-				// Validamos que la pelicula exista
+				// Validamos que exista
 				validate(id)
 					.done(success);
 			}
 			else {
 
-				success(new moviesCollection.model);
+				success(new usersCollection.model);
 			}
 		});
 		
 		//
 		router.on('route:showDetailView', function (id) {
 
-			// Validamos que la pelicula exista
+			// Validamos que exista
 			validate(id)
 				.done(function (model) {
 				
 					// Instanciamos
-					var view = new MoviesDetailView({model: model});
+					var view = new UsersDetailView({model: model});
 
-					app.vent.trigger('app:showView', view, Movies.menuConf);
+					app.vent.trigger('app:showView', view, Users.menuConf);
 			});
 		});
 	});
 
 	//
-	movies.menuConf = {
-		label: 'Peliclas',
-		routePath: '#movies'
+	users.menuConf = {
+		label: 'Usuarios',
+		routePath: '#users'
 	};
 
-	return movies;
+	return users;
 });

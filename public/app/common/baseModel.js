@@ -9,7 +9,7 @@ define([
     destroy: function (options) {
 
       var options = options || {};
-      options['headers'] = {'IF-Match': this.get('_rev')};
+      options['headers'] = {'IF-Match': this.get('__v')};
       Backbone.Model.prototype.destroy.call(this, options);
     }
   });

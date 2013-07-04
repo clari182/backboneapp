@@ -21,7 +21,7 @@ var Movies = mongoose.model('Movies', new Schema({
 
 var Users = mongoose.model('Users', new Schema({
   name: String,
-  lastName: String,
+  lastname: String,
   email: String
 }));
 
@@ -64,9 +64,55 @@ app.get('/', function (req, res) {
 // select
 app.get('/movies', function (req, res) {
 
-  Movies.find({}, function (err, docs) {
+  var cond = {};
+  if (!!req.query.title) {
 
-    res.send(docs);
+    cond['title'] = {$regex: '.*(' + req.query.title + ').*', $options: 'i'}
+  }
+
+  // Buscamos el total de registros
+  Movies.count(cond, function (err, count) {
+
+    if (!err) {
+
+      var query = Movies.find(cond),
+        page = 1,
+        size = 1;
+
+      if (!isNaN(req.query.size) && req.query.size > 0) {
+        size = req.query.size;
+      }
+      if (!isNaN(req.query.page) && req.query.page > 0) {
+        page = req.query.page;
+      }
+
+      // Buscamos los registros acotados
+      query
+        .skip((page - 1) * size)
+        .limit(size)
+        .sort('title')
+        .exec(function (err, docs) {
+
+          if (!err) {
+
+            // Devolvemos
+            res.send({
+              total: count,
+              rows: docs
+            });
+          }
+          else {
+
+            console.log(err);
+            res.status(403).send('{"success":false}');            
+          }
+        });
+    }
+    else {
+
+      console.log(err);
+      res.status(403).send('{"success":false}');
+    }
   });
 });
 // insert
@@ -155,9 +201,55 @@ app.delete('/movies/:id', function (req, res) {
 // select
 app.get('/users', function (req, res) {
 
-  Users.find({}, function (err, docs) {
+  var cond = {};
+  if (!!req.query.name) {
 
-    res.send(docs);
+    cond['name'] = {$regex: '.*(' + req.query.name + ').*', $options: 'i'}
+  }
+
+  // Buscamos el total de registros
+  Users.count(cond, function (err, count) {
+
+    if (!err) {
+
+      var query = Users.find(cond),
+        page = 1,
+        size = 1;
+
+      if (!isNaN(req.query.size) && req.query.size > 0) {
+        size = req.query.size;
+      }
+      if (!isNaN(req.query.page) && req.query.page > 0) {
+        page = req.query.page;
+      }
+
+      // Buscamos los registros acotados
+      query
+        .skip((page - 1) * size)
+        .limit(size)
+        .sort('name lastName')
+        .exec(function (err, docs) {
+
+          if (!err) {
+
+            // Devolvemos
+            res.send({
+              total: count,
+              rows: docs
+            });
+          }
+          else {
+
+            console.log(err);
+            res.status(403).send('{"success":false}');            
+          }
+        });
+    }
+    else {
+
+      console.log(err);
+      res.status(403).send('{"success":false}');
+    }
   });
 });
 // insert
@@ -246,9 +338,121 @@ app.delete('/users/:id', function (req, res) {
 // select
 app.get('/usersRels', function (req, res) {
 
-  UsersRels.find({idReg: req.params.idReg, typeReg: req.params.typeReg}, function (err, docs) {
+  var cond = {};
+  if (!!req.query.idReg) {
 
-    res.send(docs);
+    cond['idReg'] = req.query.idReg;
+  }
+  if (!!req.query.typeReg) {
+
+    cond['typeReg'] = req.query.typeReg;
+  }
+  if (!!req.query.idUser) {
+
+    cond['idUser'] = req.query.idUser;
+  }
+
+  // Buscamos el total de registros
+  UsersRels.count(cond, function (err, count) {
+
+    if (!err) {
+
+      var query = UsersRels.find(cond),
+        page = 1,
+        size = 1;
+
+      if (!isNaN(req.query.size) && req.query.size > 0) {
+        size = req.query.size;
+      }
+      if (!isNaN(req.query.page) && req.query.page > 0) {
+        page = req.query.page;
+      }
+
+      // Buscamos los registros acotados
+      query
+        .skip((page - 1) * size)
+        .limit(size)
+        .exec(function (err, docs) {
+
+          if (!err) {
+
+            var total = docs.length,
+              counter = total;
+              i = 0,
+              arrDocs = [];
+
+            // Si no hay relaciones
+            if (total == 0) {
+
+              res.send({
+                total: count,
+                rows: docs
+              });
+
+              return true;
+            }
+
+            for (i; i < total; i++) {
+
+              (function (i) {
+
+                var objDoc = JSON.stringify(docs[i]);
+                objDoc = JSON.parse(objDoc);
+
+                // Buscamos los datos del usuario
+                Users.findById(objDoc.idUser, function (err, doc) {
+
+                  if (!err) {
+
+                    objDoc['nameUser'] = doc.name + ' ' + doc.lastname;
+                    console.log(objDoc);
+                  }
+                  else {
+
+                    console.log(err);
+                  }
+
+                  // Buscamos los datos del registro
+                  Movies.findById(objDoc.idReg, function (err, doc) {
+
+                    if (!err) {
+
+                      objDoc['titleReg'] = doc.title;
+                    }
+                    else {
+                      
+                      console.log(err);
+                    }
+
+                    arrDocs.push(objDoc);
+
+                    counter--;
+                    if (counter === 0) {
+
+                      // Devolvemos
+                      res.send({
+                        total: count,
+                        rows: arrDocs
+                      });
+                    }
+                  });
+                });
+
+              })(i);
+            }
+          }
+          else {
+
+            console.log(err);
+            res.status(403).send('{"success":false}');            
+          }
+        });
+    }
+    else {
+
+      console.log(err);
+      res.status(403).send('{"success":false}');
+    }
   });
 });
 // insert

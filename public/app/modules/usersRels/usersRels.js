@@ -21,9 +21,13 @@ define([
 		//
 		this.getLayout = function (config) {
 
-			var collectionView = new UsersRelsCollectionView({collection: usersRelsCollection}),
+			var collectionView = new UsersRelsCollectionView({
+					collection: usersRelsCollection,
+					showField: !config.idUser? 'nameUser' : 'titleReg'
+				}),
 				paginationView = new PaginationView({collection: usersRelsCollection}),
-				layout = new UsersRelsCollectionLayout();
+				layout = new UsersRelsCollectionLayout(),
+				typeReg = 'user';
 
 			defaultParams = config;
 
@@ -32,7 +36,7 @@ define([
 
 				// Solicitamos confirmacion
 				eventHandler.trigger('app:showConfirm', {
-					message: 'Estas seguro de eliminar la relacion con el usuario "' + view.model.get('name') + '"?',
+					message: 'Estas seguro de eliminar esta relacion?',
 					accept: function () {
 
 						// Destruimos el modelo

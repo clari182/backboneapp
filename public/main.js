@@ -18,15 +18,17 @@ require([
 	'app/app',
 	'app/modules/top/top',
 	'app/modules/movies/movies',
+	'app/modules/users/users',
 	'app/modules/menu/menu',
     'app/modules/usersRels/usersRels',
     'app/modules/modal/modal'
-], function(eventHandler, app, top, movies, menu, usersRels) {
+], function(eventHandler, app, top, movies, users, menu, usersRels) {
 
 	//
 	menu.on('start', function () {
 
 		eventHandler.trigger('menu:createButton', movies.menuConf);
+		eventHandler.trigger('menu:createButton', users.menuConf);
 	});
 
 	//
