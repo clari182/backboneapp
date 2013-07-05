@@ -4,7 +4,7 @@ define([
     'bbloader',
     'text!app/modules/pagination/views/templates/pagination.html'
 ], function ($, _, Backbone, paginationHTML) {
-  
+
     //
     var PaginatorView = Backbone.Marionette.View.extend({
 
@@ -38,7 +38,7 @@ define([
             }));
         },
         changePage: function (page) {
-          
+
             if (page >= 1 && page <= this.totalPages) {
 
                 this.trigger('changePage', page);

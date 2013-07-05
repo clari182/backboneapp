@@ -13,12 +13,12 @@ define([
 
 	var movies = app.module('Movies', function (Movies, app) {
 
-		var moviesCollection = new MoviesCollection([]), 
+		var moviesCollection = new MoviesCollection([]),
 
 			prevFilterParams = {},
 
 			validate = function (id) {
-	      
+
 				var model = new moviesCollection.model({_id: id}),
 					dfd = jQuery.Deferred();
 
@@ -46,7 +46,7 @@ define([
 					});
 
 				return dfd.promise();
-			}, 
+			},
 
 			router =  new MoviesRouter({controller: moviesController});
 
@@ -141,7 +141,7 @@ define([
 			});
 			app.vent.trigger('app:showView', layout, Movies.menuConf);
 		});
-		
+
 		//
 		router.on('route:showFormView', function (id) {
 
@@ -201,17 +201,17 @@ define([
 			}
 			else {
 
-				success(new moviesCollection.model);
+				success(new moviesCollection.model());
 			}
 		});
-		
+
 		//
 		router.on('route:showDetailView', function (id) {
 
 			// Validamos que la pelicula exista
 			validate(id)
 				.done(function (model) {
-				
+
 					// Instanciamos
 					var view = new MoviesDetailView({model: model});
 

@@ -5,9 +5,9 @@ define([
   var Button = Backbone.Model.extend({
     defaults : {
       label : '',
-      routePath: '',
-    },
-
+      routePath: ''
+    }
   });
+
   return Button;
 });

@@ -3,14 +3,14 @@ define([
   'bbloader',
   'text!app/modules/movies/views/templates/form.html'
 ], function($, Backbone, moviesFormHTML) {
-  
+
   //
   var MoviesFormView = Backbone.Marionette.ItemView.extend({
 
     tagName: 'div',
 
     className: 'span12',
-    
+
     template: moviesFormHTML,
 
     //
@@ -18,10 +18,10 @@ define([
       'submit .movie-form': 'save',
       'change .poster': 'upload'
     },
-    
+
     // Guardamos los cambios en el modelo
     save: function (evt) {
-      
+
       var attrs = {};
 
       // Buscamos los inputs y obtenemos el valor
@@ -93,7 +93,7 @@ define([
         reader.readAsDataURL(file);
       }
       else {
-        
+
         this.trigger('showError', {message: 'El archivo ingresado no es una imagen'});
       }
     }

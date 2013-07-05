@@ -3,7 +3,7 @@ define([
     'bbloader',
     'text!app/modules/usersRels/views/templates/layout.html'
 ], function (_, Backbone, usersRelsLayoutHTML) {
-  
+
   //
   var UsersRelsCollectionLayout = Backbone.Marionette.Layout.extend({
 

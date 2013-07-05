@@ -4,8 +4,8 @@ define([
 ], function (Backbone, buttonHTML) {
 
 	var ButtonView = Backbone.Marionette.ItemView.extend({
-	    template: buttonHTML,
-	    tagName: 'li'
+		template: buttonHTML,
+		tagName: 'li'
 	});
 
 	return ButtonView;

@@ -8,7 +8,7 @@ define([
 		// Cuando la aplicacion arraque le decimos que mostrar en el Top
 		app.on('start', function () {
 
-			this.vent.trigger('app:showTop', new TopView);
+			this.vent.trigger('app:showTop', new TopView());
 		});
 	});
 

@@ -5,7 +5,7 @@ define([
 
   var Movie = BaseModel.extend({
     urlRoot: 'http://socramg.iriscouch.com/videoclub/',
-    
+
     defaults: {
       title: '',
       year: 0,
@@ -16,7 +16,7 @@ define([
 
     validate: function (attrs) {
       var year = new Date().getFullYear();
-      
+
       var error = [];
 
       if (!attrs.title.trim()) {

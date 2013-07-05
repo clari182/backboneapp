@@ -3,7 +3,7 @@ define([
     'bbloader',
     'text!app/modules/movies/views/templates/layout.html'
 ], function (_, Backbone, moviesLayoutHTML) {
-  
+
   //
   var MoviesCollectionLayout = Backbone.Marionette.Layout.extend({
 

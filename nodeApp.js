@@ -3,10 +3,10 @@
  * Module dependencies.
  */
 var fs = require('fs');
-var express = require('express')
-  , http = require('http')
-  , path = require('path')
-  , mongoose = require('mongoose');
+var express = require('express'),
+  http = require('http'),
+  path = require('path'),
+  mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/deloitte');
 var Schema = mongoose.Schema;

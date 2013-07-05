@@ -4,7 +4,7 @@ define([
 ], function (Backbone, topHTML) {
 
 	var TopView = Backbone.Marionette.ItemView.extend({
-	    template: topHTML
+		template: topHTML
 	});
 
 	return TopView;

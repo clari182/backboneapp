@@ -4,7 +4,7 @@ define([
 
   var UsersRels = BaseModel.extend({
     urlRoot: '/usersRels',
-    
+
     defaults: {
       _id: undefined,
       idReg: '',
@@ -14,6 +14,6 @@ define([
       lastName: ''
     }
   });
-  
+
   return UsersRels;
 });

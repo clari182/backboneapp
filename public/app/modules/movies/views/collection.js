@@ -3,7 +3,7 @@ define([
   'text!app/modules/movies/views/templates/collection.html',
   'app/modules/movies/views/collectionItem'
 ], function (Backbone, moviesCollectionHTML, MoviesCollectionItemView) {
-  
+
   //
   var MoviesCollectionView = Backbone.Marionette.CompositeView.extend({
 

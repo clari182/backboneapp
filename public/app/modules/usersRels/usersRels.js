@@ -11,7 +11,7 @@ define([
 	var usersRels = app.module('UsersRels', function (UsersRels, app) {
 		var usersRelsCollection, prevFilterParams, defaultParams;
 
-		
+
 		// Collection init
 		usersRelsCollection = new UsersRelsCollection([]);
 
@@ -78,7 +78,7 @@ define([
 				usersRelsCollection.remove(usersRelsCollection.models);
 				usersRelsCollection.fetch({data: params});
 			});
-			
+
 			layout.on('render', function () {
 
 				this.table.show(collectionView);
@@ -87,7 +87,7 @@ define([
 			});
 
 			return layout;
-		}
+		};
 	});
 
 	return usersRels;

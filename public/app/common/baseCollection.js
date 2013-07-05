@@ -1,8 +1,7 @@
 define([
   'backbone'
 ], function(Backbone) {
-  
-  // UserCollection, es una clase que que agrupa/ordena/pagina/etc modelos del mismo tipo
+
   var BaseCollection = Backbone.Collection.extend({
     totalItems : 0,
     pageNumber : 1,
@@ -10,11 +9,11 @@ define([
     /*parse: function (resp, options) {
       
       this.totalItems = resp.total;
-    	return resp.rows;
+      return resp.rows;
     },*/
     fetch: function (options) {
 
-      var options = options || {};
+      options = options || {};
 
       //
       if (!options.data) {

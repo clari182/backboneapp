@@ -8,7 +8,7 @@ define([
 ], function ($, _, app, ModalLayout, ModalCollectionView, ModalCollection) {
 
 	var ModalModule = app.module('ModalModule', function (ModalModule, app) {
-		
+
 		this.getLayout = function (config) {
 
 			var layout = new ModalLayout();
@@ -25,23 +25,23 @@ define([
 				this.setTitle(config.title);
 
 				//
-			  this.titles.show(new ModalCollectionView({
-			    collection: new ModalCollection(config.tabs)
-			  }));
+				this.titles.show(new ModalCollectionView({
+					collection: new ModalCollection(config.tabs)
+				}));
 
-			  _.each(config.tabs, function (tab) {
+				_.each(config.tabs, function (tab) {
 
-			    var tabName = 'modalTab' + tab._index,
-			      $title = $('<div/>', {
-			        html: tab.title,
-			        id: tabName,
-			        class: 'tab-pane'
-			      });
+					var tabName = 'modalTab' + tab._index,
+					$title = $('<div/>', {
+						html: tab.title,
+						id: tabName,
+						class: 'tab-pane'
+					});
 
-			    this.$el.find('.tab-content').append($title);
-			    this.addRegion(tabName, '#' + tabName);
-			    this[tabName].show(tab.view);
-			  }, this);
+					this.$el.find('.tab-content').append($title);
+					this.addRegion(tabName, '#' + tabName);
+					this[tabName].show(tab.view);
+				}, this);
 			});
 
 			layout.on('closeModal', function () {
@@ -52,6 +52,6 @@ define([
 			return layout;
 		};
 	});
-	
+
 	return ModalModule;
 });

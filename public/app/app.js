@@ -44,10 +44,10 @@ define([
 
 		Modals.loading({show: false});
 	});
-	
+
 	app.on('start', function () {
 
-    	Backbone.history.start();
+		Backbone.history.start();
 	});
 
 	//

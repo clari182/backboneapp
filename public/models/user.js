@@ -14,7 +14,7 @@ define([
     },
 
     validate: function (attrs) {
-      
+
       var error = [];
 
       if (!attrs.name.trim()) {
