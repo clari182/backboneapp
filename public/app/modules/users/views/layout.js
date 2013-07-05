@@ -1,19 +1,22 @@
 define([
     'underscore',
     'bbloader',
-    'text!app/modules/usersRels/views/templates/layout.html'
-], function (_, Backbone, usersRelsLayoutHTML) {
+    'text!app/modules/users/views/templates/layout.html'
+], function (_, Backbone, usersLayoutHTML) {
 
   //
-  var UsersRelsCollectionLayout = Backbone.Marionette.Layout.extend({
+  var UsersCollectionLayout = Backbone.Marionette.Layout.extend({
 
     tagName: 'div',
 
-    template: usersRelsLayoutHTML,
+    className: 'span12',
+
+    template: usersLayoutHTML,
 
     regions: {
         pagination: '.pagination-container',
-        table: '.collection-container'
+        table: '.collection-container',
+        modal: '.modal-body'
     },
 
     //
@@ -27,7 +30,7 @@ define([
 
       var params = {
         page: 1,
-        key: this.$el.find('.search').val()
+        name: this.$el.find('.search').val()
       };
 
       if (!isNaN(page) && page > 0) {
@@ -55,5 +58,5 @@ define([
     }
   });
 
-  return UsersRelsCollectionLayout;
+    return UsersCollectionLayout;
 });

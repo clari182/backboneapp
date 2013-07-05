@@ -1,68 +1,82 @@
 define([
-	'bbloader',
-	'modals',
-	'app/common/eventHandler'
+  'bbloader',
+  'modals',
+  'app/common/eventHandler'
 ], function (Backbone, Modals, eventHandler) {
 
-	var app = new Backbone.Marionette.Application();
 
-	app.addRegions({
-		top: '.top',
-		menu: '.menu',
-		main: '.main',
-		modals: '.modals'
-	});
+  var app = new Backbone.Marionette.Application();
 
-	//
-	app.vent.on('app:showView', function (view, module) {
+  /**
+    * Regions
+    */
+  app.addRegions({
+    top: '.top',
+    menu: '.menu',
+    main: '.main',
+    modals: '.modals'
+  });
 
-		if (module){
-			eventHandler.trigger('menu:highligthItemMenu', module);
-		}
 
-		this.main.show(view);
-	}, app);
-	app.vent.on('app:showTop', function (view) {
+  /**
+    * Regions events
+    */
+  app.vent.on('app:showView', function (view, module) {
 
-		this.top.show(view);
-	}, app);
-	app.vent.on('app:showMenu', function (view) {
+    if (module){
+      eventHandler.trigger('menu:highligthItemMenu', module);
+    }
 
-		app.menu.show(view);
-	});
-	app.vent.on('app:showModal', function (view) {
+    this.main.show(view);
+  }, app);
+  app.vent.on('app:showTop', function (view) {
 
-		app.modals.show(view);
-		view.$el.modal('show');
-		view.setActiveTab(0);
-	});
-	app.vent.on('app:showSpinner', function () {
+    this.top.show(view);
+  }, app);
+  app.vent.on('app:showMenu', function (view) {
 
-		Modals.loading({show: true});
-	});
-	app.vent.on('app:hideSpinner', function () {
+    app.menu.show(view);
+  });
+  app.vent.on('app:showModal', function (view) {
 
-		Modals.loading({show: false});
-	});
+    app.modals.show(view);
+    view.$el.modal('show');
+    view.setActiveTab(0);
+  });
+  app.vent.on('app:showSpinner', function () {
 
-	app.on('start', function () {
+    Modals.loading({show: true});
+  });
+  app.vent.on('app:hideSpinner', function () {
 
-		Backbone.history.start();
-	});
+    Modals.loading({show: false});
+  });
 
-	//
-	eventHandler.on('app:showError', function (config) {
 
-		Modals.error(config);
-	});
-	eventHandler.on('app:showSuccess', function (config) {
+  /**
+    * Modals events
+    */
+  app.vent.on('app:showError', function (config) {
 
-		Modals.success(config);
-	});
-	eventHandler.on('app:showConfirm', function (config) {
+    Modals.error(config);
+  });
+  app.vent.on('app:showSuccess', function (config) {
 
-		Modals.confirm(config);
-	});
+    Modals.success(config);
+  });
+  app.vent.on('app:showConfirm', function (config) {
 
-	return app;
+    Modals.confirm(config);
+  });
+
+
+  /**
+    * App events
+    */
+  app.on('start', function () {
+
+      Backbone.history.start();
+  });
+
+  return app;
 });

@@ -5,15 +5,15 @@ define([
 	return {
 		showCollectionView: function () {
 
-			eventHandler.trigger('movies:router:collection');
+			eventHandler.trigger('users:router:collection');
 		},
 		showDetailView: function (id) {
 
-			eventHandler.trigger('movies:router:detail', id);
+			eventHandler.trigger('users:router:detail', id);
 		},
 		showFormView: function (id) {
 
-			eventHandler.trigger('movies:router:form', id);
+			eventHandler.trigger('users:router:form', id);
 		}
 	};
 });

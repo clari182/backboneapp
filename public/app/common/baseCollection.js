@@ -1,16 +1,35 @@
 define([
   'backbone'
 ], function(Backbone) {
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> origin/master
   var BaseCollection = Backbone.Collection.extend({
     totalItems : 0,
     pageNumber : 1,
     pageSize : 10,
-    /*parse: function (resp, options) {
+
+    /**
+      * Overwrite native function
+      * for parse response
+      */
+    parse: function (resp, options) {
       
       this.totalItems = resp.total;
+<<<<<<< HEAD
       return resp.rows;
     },*/
+=======
+    	return resp.rows;
+    },
+
+    /**
+      * Overload native function
+      * for paging
+      */
+>>>>>>> origin/master
     fetch: function (options) {
 
       options = options || {};

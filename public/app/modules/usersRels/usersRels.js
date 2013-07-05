@@ -1,94 +1,101 @@
 define([
-	'underscore',
-	'app/app',
-	'app/common/eventHandler',
-	'app/modules/usersRels/collections/rels',
-	'app/modules/usersRels/views/layout',
-    'app/modules/usersRels/views/collection',
-    'app/modules/pagination/views/pagination'
-], function (_, app, eventHandler, UsersRelsCollection, UsersRelsCollectionLayout, UsersRelsCollectionView, PaginationView) {
+  'underscore',
+  'app/app',
+  'app/modules/usersRels/collections/rels',
+  'app/modules/usersRels/views/layout',
+  'app/modules/usersRels/views/collection',
+  'app/modules/pagination/views/pagination'
+], function (_, app, UsersRelsCollection, UsersRelsCollectionLayout, UsersRelsCollectionView, PaginationView) {
 
-	var usersRels = app.module('UsersRels', function (UsersRels, app) {
-		var usersRelsCollection, prevFilterParams, defaultParams;
-
-
-		// Collection init
-		usersRelsCollection = new UsersRelsCollection([]);
+  var usersRels = app.module('UsersRels', function (UsersRels, app) {
+    var usersRelsCollection, prevFilterParams, defaultParams;
 
 
-		//
-		// METHODS
-		//
-		this.getLayout = function (config) {
+    /**
+      * Collection init
+      */
+    usersRelsCollection = new UsersRelsCollection([]);
 
-			var collectionView = new UsersRelsCollectionView({collection: usersRelsCollection}),
-				paginationView = new PaginationView({collection: usersRelsCollection}),
-				layout = new UsersRelsCollectionLayout();
 
-			defaultParams = config;
+    /**
+      * Methods definition
+      */
+    this.getLayout = function (config) {
 
-			//
-			collectionView.on('itemView:confirmRemove', function (view) {
+      var collectionView = new UsersRelsCollectionView({
+          collection: usersRelsCollection,
+          showField: !config.idUser? 'nameUser' : 'titleReg'
+        }),
+        paginationView = new PaginationView({collection: usersRelsCollection}),
+        layout = new UsersRelsCollectionLayout(),
+        typeReg = 'user';
 
-				// Solicitamos confirmacion
-				eventHandler.trigger('app:showConfirm', {
-					message: 'Estas seguro de eliminar la relacion con el usuario "' + view.model.get('name') + '"?',
-					accept: function () {
+      // Save config on a private var
+      defaultParams = config;
 
-						// Destruimos el modelo
-						view.model.destroy({
-							// Si el modelo se elimino con exito
-							success: function () {
+      /**
+        * Listen events on CollectionView
+        */
+      collectionView.on('itemview:confirmRemove', function (view) {
 
-								// Avisamos
-								eventHandler.trigger('app:showSuccess', {
-									message: 'La relacion fue eliminada con exito!'
-								});
-							},
-							error: function () {
+        // Request user confirmation
+        app.vent.trigger('app:showConfirm', {
+          message: 'Estas seguro de eliminar esta relacion?',
+          accept: function () {
 
-								// @TODO mostrar error
+            // Destroy model
+            view.model.destroy({
+              success: function () {
 
-								// Avisamos
-								eventHandler.trigger('app:showError', {
-									message: '',
-									close: function () {
+                // Show success
+                app.vent.trigger('app:showSuccess', {
+                  message: 'La relacion fue eliminada con exito!'
+                });
+              },
+              error: function () {
 
-										//@TODO ver si es necesario hacer algo
-									}
-								});
-							}
-						});
-					}
-				});
-			});
+                // @TODO get error from response
 
-			//
-			layout.on('filter', function (params) {
+                // Show error
+                app.vent.trigger('app:showError', {
+                  message: ''
+                });
+              }
+            });
+          }
+        });
+      });
 
-				if (!params) {
-					params = prevFilterParams;
-				}
-				else {
-					prevFilterParams = params;
-				}
 
-				params = _.extend(params, defaultParams || {});
+      /**
+        * Listen events on Layout
+        */
+      layout.on('filter', function (params) {
 
-				usersRelsCollection.remove(usersRelsCollection.models);
-				usersRelsCollection.fetch({data: params});
-			});
+        if (!params) {
+          params = prevFilterParams;
+        }
+        else {
+          prevFilterParams = params;
+        }
 
-			layout.on('render', function () {
+        params = _.extend(params, defaultParams || {});
 
-				this.table.show(collectionView);
-				this.pagination.show(paginationView);
-				this.filter(1);
-			});
+        usersRelsCollection.remove(usersRelsCollection.models);
+        usersRelsCollection.fetch({data: params});
+      });
 
-			return layout;
-		};
-	});
+      layout.on('render', function () {
 
-	return usersRels;
+        this.table.show(collectionView);
+        this.pagination.show(paginationView);
+        this.filter(1);
+      });
+
+      //
+      return layout;
+    };
+  });
+
+  return usersRels;
 });

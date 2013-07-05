@@ -4,7 +4,7 @@ define([
 
   var Movie = BaseModel.extend({
     urlRoot: '/movies',
-    
+
     defaults: {
       _id: undefined,
       title: '',
@@ -16,7 +16,7 @@ define([
 
     validate: function (attrs) {
       var year = new Date().getFullYear();
-      
+
       var error = [];
 
       if (!attrs.title.trim()) {

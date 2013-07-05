@@ -16,7 +16,19 @@ define([
 
     itemView: UsersRelsCollectionItemView,
 
-    itemViewContainer: 'tbody'
+    itemViewContainer: 'tbody',
+
+    /**
+      * Overwrite native function
+      * to pass to the itemViews 
+      * the field that needs to be showed
+      */
+    buildItemView: function (item, ItemViewType, itemViewOptions) {
+
+      var options = _.extend({model: item}, itemViewOptions);
+      options.showField = this.options.showField;
+      return new ItemViewType(options);
+    }
   });
 
   return UsersRelsCollectionView;

@@ -15,28 +15,27 @@ define([
 
     //
     events: {
-      'submit .movie-form': 'save',
+      'submit .form': 'save',
       'change .poster': 'upload'
     },
 
-    // Guardamos los cambios en el modelo
     save: function (evt) {
 
       var attrs = {};
 
-      // Buscamos los inputs y obtenemos el valor
+      // Search for inputs values
       $(evt.target).find(':input').not('button').each(function () {
 
         var el = $(this);
         attrs[el.attr('name')] = el.val();
       });
 
-      //
+      // Fire event for the listener (Module)
       this.trigger('save', this.model, attrs);
 
       //
       evt.preventDefault();
-      return false; // Evitamos que se recarge la pagina
+      return false; // Prevent page reload
     },
 
     upload: function (evt) {
@@ -44,56 +43,57 @@ define([
         file = files[0],
         reader;
 
-      // Si hay un archivo y si es una imagen
+      // If its an image file
       if (!!file && file.type.match('image.*')) {
 
-        // Si tenia poster
+        // If it had a poster
         if (this.model.get('poster') !== '') {
 
-          // Borramos el poster anterior
+          // Erase the poster
           this.model.set('poster', '');
 
           //
-          this.$el.find('.poster-img').addClass('hide'); // Ocultamos
+          this.$el.find('.poster-img').addClass('hide'); // Hide img
         }
 
         //
-        this.$el.find('.poster').addClass('hide'); // Ocultamos
-        this.$el.find('.poster-loader').removeClass('hide'); // Mostramos
+        this.$el.find('.poster').addClass('hide'); // Hide input
+        this.$el.find('.poster-loader').removeClass('hide'); // Show loader
 
-        // Creamos un reader
+        // Create Reader
         reader = new FileReader();
 
-        // Si el archivo se cargo con exito
+        // Listen on load event
         reader.onload = $.proxy(function (e) {
 
-          // Guardamos el nuevo poster
+          // Save poster info
           this.model.set('poster', e.target.result);
 
-          // Seteamos el src para ver la imagen
+          // Set img tag src
           this.$el.find('.poster-img').attr('src', e.target.result);
 
-          this.$el.find('.poster-loader').addClass('hide'); // Ocultamos
-          this.$el.find('.poster-img').removeClass('hide'); // Mostramos
-          this.$el.find('.poster').removeClass('hide'); // Mostramos
+          this.$el.find('.poster-loader').addClass('hide'); // Hide loader
+          this.$el.find('.poster-img').removeClass('hide'); // Show img
+          this.$el.find('.poster').removeClass('hide'); // Show input
 
         }, this);
 
-        // Si el archivo no se cargo con exito
+        // Listen on error event
         reader.onerror = $.proxy(function () {
 
-          this.$el.find('.poster-loader').addClass('hide'); // Ocultamos
-          this.$el.find('.poster').removeClass('hide'); // Mostramos
+          this.$el.find('.poster-loader').addClass('hide'); // Hide loader
+          this.$el.find('.poster').removeClass('hide'); // Show input
 
           //
           this.trigger('showError', {message: 'Ha ocurrido un error al intentar cargar el archivo'});
         }, this);
 
-        // Comenzamos la carga del archivo
+        // Start load
         reader.readAsDataURL(file);
       }
       else {
 
+        // Show error
         this.trigger('showError', {message: 'El archivo ingresado no es una imagen'});
       }
     }
