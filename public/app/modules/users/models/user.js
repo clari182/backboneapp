@@ -30,6 +30,10 @@ define([
       if (error.length > 0) {
         return error;
       }
+    },
+
+    getFullname: function () {
+      return this.get('name') + ' ' + this.get('lastname');
     }
   });
 

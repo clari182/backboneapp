@@ -1,6 +1,6 @@
 define([
 	'bbloader',
-	'text!modules/menu/tplMenu.html'
+	'text!templates/menu.html'
 ], function (Backbone, html) {
 
 	var MenuView = Backbone.Marionette.ItemView.extend({

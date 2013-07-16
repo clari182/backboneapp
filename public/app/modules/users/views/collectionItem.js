@@ -18,13 +18,13 @@ define([
     confirmRemove: function() {
 
       // Fire event for the listener (Module)
-      this.trigger('confirmRemove', this);
+      this.trigger('confirmRemove', this.model);
     },
 
     showInfo: function() {
 
       // Fire event for the listener (Module)
-      this.trigger('showInfo', this);
+      this.trigger('showInfo', this.model);
     }
   });
 

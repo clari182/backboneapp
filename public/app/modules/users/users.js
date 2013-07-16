@@ -86,15 +86,15 @@ define([
 			/**
 				* Listen events on collectionView
 				*/
-			collectionView.on('itemview:confirmRemove', function (view) {
+			collectionView.on('itemview:confirmRemove', function (view, model) {
 
 				// Request user confirmation
 				app.vent.trigger('app:showConfirm', {
-					message: 'Estas seguro de eliminar el usuario "' + view.model.get('name') + ' ' + view.model.get('lastname') + '"?',
+					message: 'Estas seguro de eliminar el usuario "' + model.getFullname() + '"?',
 					accept: function () {
 
 						// Destroy model
-						view.model.destroy({
+						model.destroy({
 							success: function () {
 
 								// Show success
@@ -119,17 +119,17 @@ define([
 				});
 			});
 
-			collectionView.on('itemview:showInfo', function (view) {
+			collectionView.on('itemview:showInfo', function (view, model) {
 
-				var detailView = new UsersDetailView({model: view.model}),
+				var detailView = new UsersDetailView({model: model}),
 
 					usersRelsLayout = app.UsersRels.getLayout({
-						idUser: view.model.get('_id'),
+						idUser: model.get('_id'),
 						typeReg: 'movie'
 					}),
 
 					modalLayout = app.ModalModule.getLayout({
-						title: view.model.get('name') + ' ' + view.model.get('lastname'),
+						title: model.getFullname(),
 						tabs: [
 							{view: detailView, title: 'Detalle'},
 							{view: usersRelsLayout, title: 'Peliculas'}

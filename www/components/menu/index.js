@@ -4,7 +4,7 @@ define([
   'views/menu'
 ], function (MenuButtonModel, MenuButtonView, MenuView) {
 
-	var MenuController = {
+	var Menu = {
 		getLayout: function () {
 
 			this.view = new MenuView({
@@ -31,5 +31,5 @@ define([
 		}
 	};
 
-	return MenuController;
+	return Menu;
 });
