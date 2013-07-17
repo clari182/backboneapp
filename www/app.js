@@ -1,11 +1,8 @@
 define([
   'bbloader',
   'modals',
-  'modules/top/controller',
-  'modules/menu/controller',
-  'modules/movies/controller'
-  //'modules/users/module'
-], function (Backbone, Modals, TopController, MenuController, MoviesController, Router) {
+  'controlller/index'
+], function (Backbone, Modals, Index) {
 
 
   var App = new Backbone.Marionette.Application();
@@ -25,11 +22,22 @@ define([
   /**
     * Bus events
     */
+
+  App.vent.on('app:showTop', function (view) {
+
+    App.top.show(view);
+  });
+
+  App.vent.on('app:showMenu', function (view) {
+
+    App.menu.show(view);
+  });
+
   App.vent.on('app:showView', function (view, module) {
 
     if (module) {
 
-      MenuController.setSelectedButton(module);
+      App.vent.trigger('menu:setSelected', module);
     }
 
     App.main.show(view);
@@ -39,23 +47,15 @@ define([
 
     App.modals.show(view);
   });
-  App.vent.on('app:showLoader', function (show) {
+
+  App.vent.on('app:showSpinner', function (show) {
 
     Modals.loading({show: show});
   });
 
+  App.vent.on('app:navigate', function (route) {
 
-  /**
-    * Regions events
-    */
-  App.onInitializer(function () {
-
-    App.top.show(TopController.getLayout());
-
-    App.menu.show(MenuController.getLayout());
-    MenuController.addButton(MoviesController.menuConf);
-
-    var router = new Router({controller: MoviesController});
+    Backbone.Router.navigate(route, {trigger: true});
   });
 
 

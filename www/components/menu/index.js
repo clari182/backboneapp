@@ -1,8 +1,9 @@
 define([
-  'models/menuButton',
-  'views/menuButton',
-  'views/menu'
-], function (MenuButtonModel, MenuButtonView, MenuView) {
+	'app',
+	'models/menuButton',
+	'views/menuButton',
+	'views/menu'
+], function (App, MenuButtonModel, MenuButtonView, MenuView) {
 
 	var Menu = {
 		getLayout: function () {
@@ -30,6 +31,11 @@ define([
 			}
 		}
 	};
+
+  App.vent.on('menu:setSelected', function (data) {
+
+	MenuComp.setSelectedButton(data);
+  });
 
 	return Menu;
 });

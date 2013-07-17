@@ -40,7 +40,7 @@ app.configure(function () {
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(express.static(path.join(__dirname, 'www')));
 });
 
 app.configure('development', function () {
@@ -67,7 +67,7 @@ app.get('/movies', function (req, res) {
   var cond = {};
   if (!!req.query.title) {
 
-    cond['title'] = {$regex: '.*(' + req.query.title + ').*', $options: 'i'}
+    cond['title'] = {$regex: '.*(' + req.query.title + ').*', $options: 'i'};
   }
 
   // Buscamos el total de registros
@@ -104,7 +104,7 @@ app.get('/movies', function (req, res) {
           else {
 
             console.log(err);
-            res.status(403).send('{"success":false}');            
+            res.status(403).send('{"success":false}');
           }
         });
     }
@@ -204,7 +204,7 @@ app.get('/users', function (req, res) {
   var cond = {};
   if (!!req.query.name) {
 
-    cond['name'] = {$regex: '.*(' + req.query.name + ').*', $options: 'i'}
+    cond['name'] = {$regex: '.*(' + req.query.name + ').*', $options: 'i'};
   }
 
   // Buscamos el total de registros
@@ -241,7 +241,7 @@ app.get('/users', function (req, res) {
           else {
 
             console.log(err);
-            res.status(403).send('{"success":false}');            
+            res.status(403).send('{"success":false}');
           }
         });
     }
@@ -382,7 +382,7 @@ app.get('/usersRels', function (req, res) {
               arrDocs = [];
 
             // Si no hay relaciones
-            if (total == 0) {
+            if (total === 0) {
 
               res.send({
                 total: count,
@@ -420,7 +420,7 @@ app.get('/usersRels', function (req, res) {
                       objDoc['titleReg'] = doc.title;
                     }
                     else {
-                      
+
                       console.log(err);
                     }
 
@@ -444,7 +444,7 @@ app.get('/usersRels', function (req, res) {
           else {
 
             console.log(err);
-            res.status(403).send('{"success":false}');            
+            res.status(403).send('{"success":false}');
           }
         });
     }
